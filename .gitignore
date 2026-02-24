@@ -19,7 +19,7 @@
 
 # vitepress
 /dist/
-/.vitepress
+/.vitepress/cache
 
 # production
 /build
@@ -39,7 +39,7 @@ yarn-error.log*
 .env*
 
 # vercel
-.vercel
+./vercel
 
 # typescript
 *.tsbuildinfo

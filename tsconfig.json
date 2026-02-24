@@ -6,6 +6,9 @@
     "strict": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "types": ["node"]
-  }
+    "types": ["node", "vitepress/client", "vite/client"],
+    "allowArbitraryExtensions": true
+  },
+  "include": ["env.d.ts", "**/*.ts", "**/*.tsx", "**/*.vue"],
+  "exclude": ["node_modules", "dist"]
 }
