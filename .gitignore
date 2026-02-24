@@ -17,12 +17,17 @@
 /.next/
 /out/
 
+# vitepress
+/dist/
+/.vitepress
+
 # production
 /build
 
 # misc
 .DS_Store
 *.pem
+/.artifacts/
 
 # debug
 npm-debug.log*
@@ -39,3 +44,5 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+AGENTS.md

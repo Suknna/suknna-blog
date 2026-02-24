@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 静态博客（VitePress）
 
-## Getting Started
+一个基于 Vue + TypeScript 的静态博客/笔记站点。
 
-First, run the development server:
+核心流程
+- 你只需要把 Markdown 放到 `note/`。
+- push 到 GitHub 后，GitHub Actions 会自动构建并发布到 GitHub Pages（自带 CDN）。
+- 构建产物输出到仓库根目录的 `dist/`。
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+写作规范
+- 文章放在 `note/**.md`。
+- 分类规则：默认取路径第一段目录名。
+  - 例：`note/tech/a.md` -> 分类 `tech`
+  - 例：`note/a.md` -> 分类 `misc`
+- 标题规则：
+  - 默认使用文件名（不含扩展名），例如 `hello-world.md` -> `Hello World`
+  - 可用 frontmatter `title` 覆盖。
+- 编辑时间：使用 Git 中该文件最后一次提交时间（CI 环境稳定可复现）。
+
+可选 frontmatter
+
+```yaml
+---
+title: "自定义标题（可选）"
+category: "自定义分类（可选）"
+summary: "列表页摘要（可选）"
+description: "SEO description（可选）"
+---
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+本地开发
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm ci
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+构建与预览
 
-## Learn More
+```bash
+npm run build
+npm run preview
+```
 
-To learn more about Next.js, take a look at the following resources:
+部署说明（GitHub Pages）
+- 工作流：`.github/workflows/pages.yml`
+- 默认按照 Project Pages 生成 base：`/${repo}/`
+- 如果你使用的是 User/Org Pages 或自定义域名：
+  - 把工作流中的 `VITEPRESS_BASE` 改成 `/`
+  - 把 `SITE_URL` 改成你的站点根（例如 `https://example.com/`）
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+切换到其他 CDN（示例思路）
+- 任何支持“上传静态目录”的平台都可以：S3/OSS/COS、Cloudflare Pages、Netlify、Vercel 等。
+- 做法：保留 `npm run build` 产物 `dist/`，把发布步骤替换成对应平台的 upload/deploy。
+- 注意：涉及云存储通常需要密钥（Secrets），建议先确认你希望使用的平台再接入。
