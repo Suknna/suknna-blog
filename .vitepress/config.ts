@@ -1,5 +1,5 @@
 import path from 'node:path'
-import { readFileSync } from 'node:fs'
+
 import { defineConfig, defineConfigWithTheme } from 'vitepress'
 import type { DefaultTheme } from 'vitepress'
 
@@ -23,25 +23,16 @@ function isContentPost(relativePath: string): boolean {
   return relativePath.endsWith('.md')
 }
 
-function readIcpNum(): string {
-  try {
-    const p = path.join(process.cwd(), 'icp.num')
-    const raw = readFileSync(p, 'utf8').trim()
-    if (!raw) return ''
-    return /^\d+$/.test(raw) ? raw : ''
-  } catch {
-    return ''
-  }
-}
+
 
 type ThemeConfig = DefaultTheme.Config & {
   icpNumber?: string
 }
 
 export default defineConfigWithTheme<ThemeConfig>({
-  lang: 'zh-CN',
-  title: '笔记',
-  description: '简洁、SEO 友好的静态博客。',
+  lang: process.env.VITEPRESS_LANG ?? 'zh-CN',
+  title: process.env.VITEPRESS_TITLE ?? '笔记',
+  description: process.env.VITEPRESS_DESCRIPTION ?? '简洁、SEO 友好的静态博客。',
 
   srcDir: 'note',
   outDir: 'dist',
@@ -111,7 +102,7 @@ export default defineConfigWithTheme<ThemeConfig>({
   },
 
   themeConfig: {
-    icpNumber: readIcpNum(),
+    icpNumber: process.env.VITEPRESS_ICP_NUMBER ?? '',
     nav: [
       { text: '文章', link: '/' },
       { text: '分类', link: '/categories' }

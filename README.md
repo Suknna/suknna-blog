@@ -1,38 +1,64 @@
 # 静态博客（VitePress）
 
-一个基于 Vue + TypeScript 的静态博客/笔记站点。
+基于 Vue + TypeScript 的静态博客/笔记站点，采用**框架与内容分离架构**。
 
-## 核心流程
+**架构说明**：博客框架与笔记内容分别位于不同仓库，通过 GitHub Actions 自动化构建。
 
-- 你只需要把 Markdown 放到 `note/`。
-- push 到 GitHub 后，GitHub Actions 会自动构建并发布到 GitHub Pages（自带 CDN）。
-- 构建产物输出到仓库根目录的 `dist/`。
+- [📚 架构文档](ARCHITECTURE.md) - 了解完整的跨仓库架构设计
+- [🚀 子仓库设置](demo/SUB_REPO_SETUP.md) - 如何创建和配置私有笔记仓库
+- [📝 单仓库参考](demo/pages.yml) - 传统的单仓库部署方式
+## 架构概览
 
+``` text
+子仓库（私有）              主仓库（框架）
+note-content-xxx    →    suknna-blog
+  ├─ note/                  ├─ .vitepress/
+  └─ .github/               ├─ scripts/
+                              ├─ .github/
+                              └─ package.json
+```
+
+**工作流程**：
+1. 在**子仓库**编辑笔记，推送到 `main` 分支
+2. 子仓库 workflow 触发主仓库构建
+3. 主仓库拉取最新笔记，构建并部署到 GitHub Pages
 ## 展示
-
-![博客首页 - 浅色模式](img/index_white.png)
-
-![博客首页 - 深色模式](img/index_black.png)
-
 ## 使用方法
 
-### Fork 到私有仓库
+本仓库是博客框架主仓库，**不包含笔记内容**。笔记内容位于独立的私有子仓库。
 
-1. Fork 本仓库到你的账号
-2. 将仓库设置为 Private
-3. 克隆到本地进行开发
+### 快速开始（框架使用）
+
+如果你只是想使用本框架搭建博客：
+
+1. **阅读架构文档**：[ARCHITECTURE.md](ARCHITECTURE.md)
+2. **配置子仓库**：按照 [demo/SUB_REPO_SETUP.md](demo/SUB_REPO_SETUP.md) 创建私有笔记仓库
+3. **设置 Secrets**：在主仓库配置 GitHub Secrets（见架构文档）
+4. **开始写作**：在子仓库添加笔记，自动触发构建
 
 ### 定制站点信息
 
-**修改站点标题和描述**：编辑 `.vitepress/config.ts`
+站点个性化配置通过环境变量注入：
 
-```typescript
-export default defineConfigWithTheme<ThemeConfig>({
-  lang: 'zh-CN',
-  title: '笔记',           // 修改这里
-  description: '简洁、SEO 友好的静态博客。',  // 修改这里
-  // ...
-})
+| 配置项 | 环境变量 | 默认值 |
+|--------|----------|--------|
+| 语言 | `VITEPRESS_LANG` | `zh-CN` |
+| 标题 | `VITEPRESS_TITLE` | `笔记` |
+| 描述 | `VITEPRESS_DESCRIPTION` | `简洁、SEO 友好的静态博客。` |
+| ICP 备案号 | `VITEPRESS_ICP_NUMBER` | `''` |
+| Base URL | `VITEPRESS_BASE` | `/` |
+| 站点 URL | `SITE_URL` | - |
+
+**配置方式**：在主仓库 Settings → Secrets and variables → Actions 中添加对应 Secret。
+### 修改首页标题
+
+首页标题在**子仓库**的 `note/index.md` 中设置：
+
+```yaml
+---
+layout: page
+title: 我的笔记  # 修改这里
+---
 ```
 
 **修改首页标题**：编辑 `note/index.md`
@@ -44,9 +70,9 @@ title: 我的笔记  # 修改这里
 ---
 ```
 
-### 配置黑名单
+### 配置黑名单（子仓库）
 
-创建或编辑 `.blogignore` 文件来忽略不想上传的文件：
+在子仓库根目录创建 `.blogignore` 文件：
 
 ```
 # 忽略单个文件
@@ -62,36 +88,21 @@ temp-*.md
 note/work/*.md
 ```
 
-### 修改 GitHub Actions 工作流
+### GitHub Actions 工作流
 
-编辑 `.github/workflows/pages.yml` 来定制部署配置：
+主仓库包含两个 workflow：
 
-- **修改触发条件**（默认：main 分支，特定路径变化）：
-  ```yaml
-  on:
-    push:
-      branches: [main]
-      paths:
-        - 'note/**'
-        - '.vitepress/**'
-        # 添加其他需要监控的路径
-  ```
+- **cross-repo-build.yml**：跨仓库构建（默认启用）
+  - 监听子仓库的 `repository_dispatch` 事件
+  - 自动拉取笔记并构建部署
 
-- **切换到 User/Org Pages 或自定义域名**：
-  ```yaml
-  env:
-    VITEPRESS_BASE: '/'      # 修改为 '/'（Project Pages 用 /${repo}/）
-    SITE_URL: https://your-domain.com/  # 修改为你的域名
-  ```
+- **pages.yml**（已移至 demo/）：单仓库参考
+  - 传统的单仓库部署方式
+  - 用于 fork 使用场景的参考
 
-- **修改 Node 版本**：
-  ```yaml
-  - name: Setup Node
-    uses: actions/setup-node@v4
-    with:
-      node-version: 20  # 修改为你需要的版本
-  ```
-
+**触发条件**：
+- 子仓库推送到 `main` 分支时自动触发
+- 主仓库支持手动触发（`workflow_dispatch`）
 ## 写作规范
 
 - 文章放在 `note/**.md`。
@@ -130,16 +141,21 @@ npm run build
 npm run preview
 ```
 
-## 部署说明（GitHub Pages）
+## 部署说明
 
-- 工作流：`.github/workflows/pages.yml`
-- 默认按照 Project Pages 生成 base：`/${repo}/`
-- 如果你使用的是 User/Org Pages 或自定义域名：
-  - 把工作流中的 `VITEPRESS_BASE` 改成 `/`
-  - 把 `SITE_URL` 改成你的站点根（例如 `https://example.com/`）
+- **跨仓库部署**（推荐）：使用 `.github/workflows/cross-repo-build.yml`
+  - 子仓库更新时自动触发
+  - 参考 [ARCHITECTURE.md](ARCHITECTURE.md)
 
-## 切换到其他 CDN（示例思路）
+- **单仓库部署**（备用）：参考 `demo/pages.yml`
+  - 适用于 fork 后直接使用的场景
+  - 需将 `note/` 放在主仓库中
+## 切换到其他 CDN
 
-- 任何支持"上传静态目录"的平台都可以：S3/OSS/COS、Cloudflare Pages、Netlify、Vercel 等。
-- 做法：保留 `npm run build` 产物 `dist/`，把发布步骤替换成对应平台的 upload/deploy。
-- 注意：涉及云存储通常需要密钥（Secrets），建议先确认你希望使用的平台再接入。
+参考 `demo/pages.yml` 中的构建步骤，将部署部分替换为对应平台的命令：
+
+- **S3/OSS/COS**：使用 `aws s3 sync dist/ s3://bucket/` 或类似命令
+- **Cloudflare Pages**：使用 Wrangler CLI
+- **Netlify/Vercel**：使用各自的 CLI 或 API
+
+**注意**：云存储需要配置 Secrets（访问密钥等），确保在 workflow 中正确引用。
