@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { withBase } from 'vitepress'
+import { useData, withBase } from 'vitepress'
 import { data as posts } from '../../../note/posts.data'
 import type { PostItem } from '../../../note/posts.data'
 
@@ -24,13 +24,15 @@ const groups = computed(() => {
     .map(([category, items]) => ({ category, items }))
     .sort((a, b) => a.category.localeCompare(b.category))
 })
+
+const { theme } = useData()
 </script>
 
 <template>
   <div class="blog-page">
     <header class="blog-hero">
       <h1>分类</h1>
-      <p>默认取路径第一段目录名：<code>note/tech/a.md</code> -> <code>tech</code>。</p>
+      <p v-if="theme.categoryHint">{{ theme.categoryHint }}</p>
     </header>
 
     <section class="blog-list" aria-label="category list">

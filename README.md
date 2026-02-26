@@ -43,31 +43,26 @@ note-content-xxx    →    suknna-blog
 | 配置项 | 环境变量 | 默认值 |
 |--------|----------|--------|
 | 语言 | `VITEPRESS_LANG` | `zh-CN` |
-| 标题 | `VITEPRESS_TITLE` | `笔记` |
+| 导航栏标题 | `VITEPRESS_TITLE` | `笔记` |
+| 首页 Hero 标题 | `VITEPRESS_HERO_TITLE` | 同 `VITEPRESS_TITLE` |
 | 描述 | `VITEPRESS_DESCRIPTION` | `简洁、SEO 友好的静态博客。` |
+| 分类页提示文字 | `VITEPRESS_CATEGORY_HINT` | `''`（不显示） |
 | ICP 备案号 | `VITEPRESS_ICP_NUMBER` | `''` |
 | Base URL | `VITEPRESS_BASE` | `/` |
 | 站点 URL | `SITE_URL` | - |
 
 **配置方式**：在主仓库 Settings → Secrets and variables → Actions 中添加对应 Secret。
-### 修改首页标题
 
-首页标题在**子仓库**的 `note/index.md` 中设置：
+### 修改首页 Hero 标题
 
-```yaml
----
-layout: page
-title: 我的笔记  # 修改这里
----
-```
+首页 Hero 标题可通过环境变量 `VITEPRESS_HERO_TITLE` 单独配置。若不设置，默认使用 `VITEPRESS_TITLE` 的值。
 
-**修改首页标题**：编辑 `note/index.md`
+**示例**（本地开发）：
 
-```yaml
----
-layout: page
-title: 我的笔记  # 修改这里
----
+```bash
+# dev.sh
+export VITEPRESS_TITLE="suknna"        # 导航栏标题
+export VITEPRESS_HERO_TITLE="我的学习笔记"  # 首页 Hero 标题
 ```
 
 ### 配置黑名单（子仓库）

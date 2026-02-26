@@ -48,3 +48,5 @@ next-env.d.ts
 AGENTS.md
 
 demo/
+
+dev.sh

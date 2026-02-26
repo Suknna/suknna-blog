@@ -10,13 +10,13 @@ function formatDate(ts: number): string {
   return `${yyyy}-${mm}-${dd}`
 }
 
-const { site } = useData()
+const { site, theme } = useData()
 </script>
 
 <template>
   <div class="blog-page">
     <header class="blog-hero">
-      <h1>{{ site.title }}</h1>
+      <h1>{{ theme.heroTitle || site.title }}</h1>
       <p>{{ site.description }}</p>
     </header>
 

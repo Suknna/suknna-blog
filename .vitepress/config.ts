@@ -26,13 +26,15 @@ function isContentPost(relativePath: string): boolean {
 
 
 type ThemeConfig = DefaultTheme.Config & {
-  icpNumber?: string
+icpNumber?: string
+  heroTitle?: string
+  categoryHint?: string
 }
 
 export default defineConfigWithTheme<ThemeConfig>({
-  lang: process.env.VITEPRESS_LANG ?? 'zh-CN',
-  title: process.env.VITEPRESS_TITLE ?? '笔记',
-  description: process.env.VITEPRESS_DESCRIPTION ?? '简洁、SEO 友好的静态博客。',
+lang: process.env.VITEPRESS_LANG ?? 'zh-CN',
+title: process.env.VITEPRESS_TITLE ?? '笔记',
+description: process.env.VITEPRESS_DESCRIPTION ?? '简洁、SEO 友好的静态博客。',
 
   srcDir: 'note',
   outDir: 'dist',
@@ -102,7 +104,9 @@ export default defineConfigWithTheme<ThemeConfig>({
   },
 
   themeConfig: {
-    icpNumber: process.env.VITEPRESS_ICP_NUMBER ?? '',
+icpNumber: process.env.VITEPRESS_ICP_NUMBER ?? '',
+    heroTitle: process.env.VITEPRESS_HERO_TITLE ?? process.env.VITEPRESS_TITLE ?? '笔记',
+    categoryHint: process.env.VITEPRESS_CATEGORY_HINT ?? '',
     nav: [
       { text: '文章', link: '/' },
       { text: '分类', link: '/categories' }
