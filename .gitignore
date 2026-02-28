@@ -55,3 +55,9 @@ dev.sh
 
 工作/
 /note/人工智能/Oh-My-OpenCode使用记录.md
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+!.env.example
