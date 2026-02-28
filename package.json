@@ -5,13 +5,15 @@
   "scripts": {
     "dev": "vitepress dev",
     "build": "vitepress build && node scripts/postbuild.mjs",
-    "preview": "vitepress preview"
+    "preview": "wrangler dev",
+    "deploy": "wrangler deploy"
   },
   "dependencies": {
     "vitepress": "^1.2.2"
   },
   "devDependencies": {
-    "@types/node": "^22.0.0"
+    "@types/node": "^22.0.0",
+    "wrangler": "^4.69.0"
   },
   "engines": {
     "node": ">=18"
