@@ -44,7 +44,7 @@ forward . /etc/resolv.conf
 
 ### 解析失败处理流程
 
-![](https://cdn.nlark.com/yuque/0/2025/png/42497920/1754135948920-09d9a8f8-37d6-4fbc-9149-c95e59e58c29.png)
+![](img/coredns-1.png)
 
 ## CoreDNS 策略配置和域名解析配置
 
@@ -65,7 +65,7 @@ forward . /etc/resolv.conf
 
 其它域名解析请求则被转发到上游 dns。如下图所示
 
-![](https://cdn.nlark.com/yuque/0/2025/jpeg/42497920/1754134382391-35a9d4d6-839d-4487-9ca8-f2da0efd35b0.jpeg)
+![](img/coredns-2.jpeg)
 
 ### 使用 dnsPolicy 字段为集群的 pod 配置 dns 策略
 

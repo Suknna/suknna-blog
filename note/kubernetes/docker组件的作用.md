@@ -92,7 +92,7 @@ containerd的命令行调试工具
 
 ## 作用图
 <!-- 这是一张图片，ocr 内容为：USER SPACE DOCKER (CLI) 1,发送命 (如 DOCKER RUN) V DOCKERD(守护进程) 配置端口转发 2.调用 CONTAINERD CONTAINERKUNTIME NETWORK DOCKER-OROXY CONTAINERD 维护 IPTABLES 规则 3.通过SHIM调用 宿主机网络栈 CONTAINERD-SHIM-RUNC-V2 4.创建容器 RUNC 5.使用内核特性 启动容器进程 KERNEL BPACE CONTHINER LINUX  内核 容器进程 IN(NAMESPACES/CGROUPS) 可选PID1 DOCKER-INIT -->
-![](https://cdn.nlark.com/yuque/0/2025/png/42497920/1747643632968-b326cbfd-6d0d-4782-b0bc-99e62bd375fb.png)
+![](img/docker-1.png)
 
 
 

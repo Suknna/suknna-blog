@@ -44,7 +44,6 @@ description: process.env.VITEPRESS_DESCRIPTION ?? '简洁、SEO 友好的静态�
   base: process.env.VITEPRESS_BASE ?? '/',
 
   head: [
-    ['meta', { name: 'referrer', content: 'strict-origin-when-cross-origin' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }],
     [

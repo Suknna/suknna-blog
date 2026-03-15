@@ -30,7 +30,7 @@ make: *** [install] Error 1
 - **新状态**：用户本次想要应用的 YAML 文件。  
     `kubectl` 会对比这三者，精确计算出需要修改、添加或删除的字段。
 
-![](https://cdn.nlark.com/yuque/0/2025/png/42497920/1761707143094-d5647911-4ed5-4609-8f9e-c0ffad2bc0de.png)
+![](img/kubebuilder-crd.png)
 
 **3. 问题原因**
 

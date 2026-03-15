@@ -1,6 +1,6 @@
 ## kubernetes 证书关系
 
-![](https://cdn.nlark.com/yuque/0/2025/png/42497920/1755426224269-cabf170a-300e-4a70-8fcf-c347e1c50dd4.png)
+![](img/k8s-cert-1.png)
 
 从上图可以看出 kubernetes 控制平面包含 etcd、kube-api-server、kube-scheduler、kube-controller-managger 等组件。这些组件之间会远程调用，例如 kube-api-server 会调用 etcd 接口存储数据，kube-controller-manager 会调用 kube-api-server 查询集群中的对象状态；同时 kube-api-server 也会和工作节点上面的 kubelet 和 kube-proxy 进行通信，以在工作节点上部署和管理应用。
 
@@ -30,13 +30,13 @@
 
 下面这张图更直观一些：
 
-![](https://cdn.nlark.com/yuque/0/2025/png/42497920/1755428736613-7a52694a-f980-49aa-b790-76b8c4eb0c18.png)
+![](img/k8s-cert-2.png)
 
 ### kubernetes 用到的 CA 和证书
 
 Kubernetes 用到了大量的证书，这里仅讨论主要证书下面文件也仅仅创建主要证书。了解这些证书使用方法和原理后，也能更快理解其他证书文件。下图标识了在 Kubernetes 中主要使用到的证书和其使用位置。
 
-![](https://cdn.nlark.com/yuque/0/2025/png/42497920/1755428974108-413df469-d4df-4a88-bc9d-b41f6f8b4a82.png)
+![](img/k8s-cert-3.png)
 
 1. etcd 集群内部各个节点之间互相通信使用的证书。由于一个 etcd 节点即为其他节点提供服务，又需要作为客户端访问其他节点，因此该证书可以同时作用与服务端和客户端证书。
 2. etcd 集群向外提供服务使用的证书。该证书是服务器证书。
@@ -135,7 +135,7 @@ EOF
 
 ### **生成文件介绍**
 
-![](https://cdn.nlark.com/yuque/0/2025/png/42497920/1755424665249-4d09d419-3229-4cbe-b19a-d682305b99e3.png)
+![](img/k8s-cert-4.png)
 
 - ca.crt：证书本体
 - ca.csr：证书请求文件，并没有实际作用。仅仅是通过这个文件去创建证书，实际使用过程中不会用到
@@ -145,7 +145,7 @@ EOF
 
 ### 将根证书拷贝到所有节点上
 
-![](https://cdn.nlark.com/yuque/0/2025/png/42497920/1755430446426-aefab136-872c-49a1-97fb-0a5ef0840183.png)
+![](img/k8s-cert-5.png)
 
 ## 生成 ETCD 证书
 
@@ -170,7 +170,7 @@ EOF
 
 这里我使用双 TLS 认证的方式。
 
-![](https://cdn.nlark.com/yuque/0/2025/png/42497920/1755431911358-a16a31a5-5ccb-4260-b2fb-acaa934340dc.png)
+![](img/k8s-cert-6.png)
 
 ### 生成 server 证书
 
