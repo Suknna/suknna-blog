@@ -1,3 +1,8 @@
+---
+date: 2024-07-02
+updated: 2026-03-15T15:36:33+08:00
+---
+
 ## kubernetes 证书关系
 
 ![](img/k8s-cert-1.png)

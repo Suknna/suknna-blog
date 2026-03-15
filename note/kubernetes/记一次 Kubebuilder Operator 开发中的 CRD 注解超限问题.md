@@ -1,3 +1,8 @@
+---
+date: 2026-02-20
+updated: 2026-03-15T15:36:33+08:00
+---
+
 ## 问题现象
 
 在开发一个名为 `nova` 的 Operator 过程中，当我执行 `make install`（其底层是 `kubectl apply`）来安装 CustomResourceDefinition (CRD) 时，终端抛出了一个错误：

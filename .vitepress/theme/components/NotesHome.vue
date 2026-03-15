@@ -11,6 +11,10 @@ function formatDate(ts: number): string {
 }
 
 const { site, theme } = useData()
+
+function shouldShowUpdated(p: { publishedAt: number; updatedAt: number | null }): boolean {
+  return !!p.updatedAt && p.updatedAt > p.publishedAt
+}
 </script>
 
 <template>
@@ -47,7 +51,8 @@ const { site, theme } = useData()
           <a class="blog-badge" :href="withBase('/categories') + '#' + encodeURIComponent(String(p.category))">
             <strong>#</strong>{{ p.category }}
           </a>
-          <span v-if="p.lastUpdated">{{ formatDate(p.lastUpdated) }}</span>
+          <span>发布于 {{ formatDate(p.publishedAt) }}</span>
+          <span v-if="shouldShowUpdated(p)">更新于 {{ formatDate(p.updatedAt as number) }}</span>
         </div>
       </article>
     </section>

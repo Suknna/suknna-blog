@@ -1,3 +1,8 @@
+---
+date: 2026-02-04
+updated: 2026-02-26T12:01:17+08:00
+---
+
 日期：2026-02-04
 
 环境信息：
@@ -196,4 +201,3 @@ kubectl get --raw "/api/v1/nodes/$NODE/proxy/stats/summary" | rg '"pods"' -n
 
 [1] [https://github.com/kubernetes/kubernetes/issues/111276](https://github.com/kubernetes/kubernetes/issues/111276)  
 [2] [https://kubernetes.io/zh-cn/docs/reference/instrumentation/node-metrics/](https://kubernetes.io/zh-cn/docs/reference/instrumentation/node-metrics/)
-
