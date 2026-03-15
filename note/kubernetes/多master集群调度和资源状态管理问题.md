@@ -1,3 +1,8 @@
+---
+date: 2024-05-01
+updated: 2026-03-15T14:41:56+08:00
+---
+
 
 在多节点中master集群的apiserver是无状态的所有master节点的apiserver都是工作的，controller manager和scheduler是在某一个时间段内只有一个节点的controller manager和scheduler进行工作 
 
@@ -23,4 +28,3 @@ metrics-server   10.10.159.134:4443                                  14d
 
 #注意如果你使用的是1.24以后的版本的kubernetes这个命令执行完成后会有kube-controller-manager和kube-scheduler的内容
 ```
-

@@ -40,7 +40,7 @@ description: process.env.VITEPRESS_DESCRIPTION ?? '简洁、SEO 友好的静态�
   outDir: 'dist',
 
   cleanUrls: true,
-  lastUpdated: true,
+  lastUpdated: false,
   base: process.env.VITEPRESS_BASE ?? '/',
 
   head: [
@@ -59,6 +59,8 @@ description: process.env.VITEPRESS_DESCRIPTION ?? '简洁、SEO 友好的静态�
   transformPageData(pageData) {
     const rel = pageData.relativePath
     const frontmatter = { ...(pageData.frontmatter || {}) }
+
+    ;(pageData as any).lastUpdated = undefined
 
     if (!frontmatter.title) {
       pageData.title = titleFromFile(rel)
@@ -112,8 +114,6 @@ icpNumber: process.env.VITEPRESS_ICP_NUMBER ?? '',
     ],
     sidebar: [],
     outline: 'deep',
-    lastUpdated: {
-      text: '最后更新'
-    }
+    lastUpdated: false
   }
 })

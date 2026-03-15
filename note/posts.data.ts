@@ -1,5 +1,5 @@
 import { execSync } from 'node:child_process'
-import { readFileSync, statSync } from 'node:fs'
+import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { createContentLoader } from 'vitepress'
 
@@ -8,7 +8,8 @@ export type PostItem = {
   title: string
   category: string
   summary: string
-  lastUpdated: number
+  publishedAt: number
+  updatedAt: number | null
 }
 
 let blacklistPatterns: string[] = []
@@ -97,12 +98,16 @@ function gitLastUpdatedSeconds(filePath: string): number | null {
   }
 }
 
-function fileMTimeMs(filePath: string): number {
-  try {
-    return statSync(filePath).mtimeMs
-  } catch {
-    return 0
+function toTimestampMs(value: unknown): number | null {
+  if (value == null || value === '') return null
+
+  if (typeof value === 'number') {
+    if (!Number.isFinite(value)) return null
+    return value < 1e12 ? value * 1000 : value
   }
+
+  const parsed = new Date(String(value)).getTime()
+  return Number.isFinite(parsed) ? parsed : null
 }
 
 loadBlacklist()
@@ -121,19 +126,27 @@ export default createContentLoader('**/*.md', {
       const title = String(fm.title || titleFromFile(relativeMd))
       const summary = String(fm.summary || fm.description || '')
 
+      const publishedAt = toTimestampMs(fm.date)
+      if (!publishedAt) {
+        throw new Error(`[posts.data] note/${relativeMd} 缺少有效 frontmatter date`)
+      }
+
       const absPath = path.join(process.cwd(), 'note', relativeMd)
+      const frontmatterUpdatedAt = toTimestampMs(fm.updated)
       const gitSeconds = gitLastUpdatedSeconds(absPath)
-      const lastUpdated = gitSeconds ? gitSeconds * 1000 : fileMTimeMs(absPath)
+      const gitUpdatedAt = gitSeconds ? gitSeconds * 1000 : null
+      const updatedAt = frontmatterUpdatedAt ?? gitUpdatedAt
 
       out.push({
         url: item.url,
         title,
         category,
         summary,
-        lastUpdated
+        publishedAt,
+        updatedAt
       })
     }
 
-    return out.sort((a, b) => b.lastUpdated - a.lastUpdated)
+    return out.sort((a, b) => b.publishedAt - a.publishedAt)
   }
 })

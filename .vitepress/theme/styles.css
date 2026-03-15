@@ -178,6 +178,10 @@ body {
   color: #0d9488;
 }
 
+.VPDoc .VPLastUpdated {
+  display: none;
+}
+
 @keyframes blog-fade-in {
   from {
     opacity: 0;

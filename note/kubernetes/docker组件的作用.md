@@ -1,3 +1,8 @@
+---
+date: 2024-06-20
+updated: 2026-03-15T15:36:33+08:00
+---
+
 ```go
 containerd  
 containerd-shim-runc-v2  
@@ -93,6 +98,4 @@ containerd的命令行调试工具
 ## 作用图
 <!-- 这是一张图片，ocr 内容为：USER SPACE DOCKER (CLI) 1,发送命 (如 DOCKER RUN) V DOCKERD(守护进程) 配置端口转发 2.调用 CONTAINERD CONTAINERKUNTIME NETWORK DOCKER-OROXY CONTAINERD 维护 IPTABLES 规则 3.通过SHIM调用 宿主机网络栈 CONTAINERD-SHIM-RUNC-V2 4.创建容器 RUNC 5.使用内核特性 启动容器进程 KERNEL BPACE CONTHINER LINUX  内核 容器进程 IN(NAMESPACES/CGROUPS) 可选PID1 DOCKER-INIT -->
 ![](img/docker-1.png)
-
-
 

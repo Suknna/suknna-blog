@@ -26,6 +26,10 @@ const groups = computed(() => {
 })
 
 const { theme } = useData()
+
+function shouldShowUpdated(p: { publishedAt: number; updatedAt: number | null }): boolean {
+  return !!p.updatedAt && p.updatedAt > p.publishedAt
+}
 </script>
 
 <template>
@@ -57,7 +61,8 @@ const { theme } = useData()
               <a :href="withBase(p.url)"><strong>{{ p.title }}</strong></a>
             </div>
             <div class="blog-meta">
-              <span v-if="p.lastUpdated">{{ formatDate(p.lastUpdated) }}</span>
+              <span>发布于 {{ formatDate(p.publishedAt) }}</span>
+              <span v-if="shouldShowUpdated(p)">更新于 {{ formatDate(p.updatedAt as number) }}</span>
             </div>
           </div>
         </div>

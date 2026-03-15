@@ -1,3 +1,8 @@
+---
+date: 2024-06-15
+updated: 2026-03-15T15:36:33+08:00
+---
+
 在k8s中pod是最小单元
 
 ## pod和容器的关系
@@ -65,7 +70,5 @@ registry.cn-hangzhou.aliyuncs.com/google_containers/pause:3.6
 | **挂载命名空间** | **通常否** | 每个容器独立，通过卷（Volume）机制共享存储。 |
 | **UTS 命名空间** | **是** | 持有 Pod 的主机名（`spec.hostname`）。 |
 | **用户命名空间** | **可能** | 如果配置了用户命名空间隔离，它也会是持有者。 |
-
-
 
 

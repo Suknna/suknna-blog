@@ -12,9 +12,12 @@ function isPost(relativePath: string | undefined): boolean {
 
 function toTimestamp(v: number | string | undefined): number {
   if (!v) return 0
-  if (typeof v === 'number') return v
+  if (typeof v === 'number') {
+    if (!Number.isFinite(v)) return 0
+    return v < 1e12 ? v * 1000 : v
+  }
   const n = Number(v)
-  if (Number.isFinite(n)) return n
+  if (Number.isFinite(n)) return n < 1e12 ? n * 1000 : n
   const d = new Date(v)
   return Number.isFinite(d.getTime()) ? d.getTime() : 0
 }
@@ -34,7 +37,22 @@ const show = computed(() => isPost(page.value.relativePath))
 
 const category = computed(() => (frontmatter.value && (frontmatter.value as any).category) || 'misc')
 
-const updated = computed(() => formatDate(toTimestamp(page.value.lastUpdated)))
+const publishedTs = computed(() => toTimestamp((frontmatter.value as any)?.date))
+
+const updatedTs = computed(() => {
+  const fmUpdated = toTimestamp((frontmatter.value as any)?.updated)
+  if (fmUpdated) return fmUpdated
+  return toTimestamp(page.value.lastUpdated)
+})
+
+const published = computed(() => formatDate(publishedTs.value))
+
+const showUpdated = computed(() => {
+  if (!publishedTs.value || !updatedTs.value) return false
+  return updatedTs.value > publishedTs.value
+})
+
+const updated = computed(() => (showUpdated.value ? formatDate(updatedTs.value) : ''))
 
 const categoryLink = computed(() =>
   withBase('/categories') + '#' + encodeURIComponent(String(category.value))
@@ -47,6 +65,7 @@ const categoryLink = computed(() =>
       分类：
       <a :href="categoryLink">#{{ category }}</a>
     </span>
-    <span v-if="updated">最后编辑：{{ updated }}</span>
+    <span v-if="published">发布于：{{ published }}</span>
+    <span v-if="updated">更新于：{{ updated }}</span>
   </div>
 </template>
