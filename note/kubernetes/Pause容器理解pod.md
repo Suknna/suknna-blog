@@ -10,7 +10,7 @@ pod类似一个组容器的集合，这些容器之间共享一份存储，网�
 
 ## pause容器
 ### pause容器镜像
-使用 `<font style="background-color:rgb(248, 248, 250);">docker insepct [CONTAAINER_ID]</font>` 查看一下 pause 容器的详情信息，可以发现 pause 容器使用的镜像为
+使用 `docker inspect [CONTAINER_ID]` 查看一下 pause 容器的详情信息，可以发现 pause 容器使用的镜像为
 
 ```plain
 registry.cn-hangzhou.aliyuncs.com/google_containers/pause:3.6
@@ -27,12 +27,13 @@ registry.cn-hangzhou.aliyuncs.com/google_containers/pause:3.6
 它仅作为 namespace 的持有者，确保业务容器崩溃不会导致整个命名空间崩溃。
 
 ## 为什么需要 pause 容器？
-+ **<font style="color:rgba(0, 0, 0, 0.87);">命名空间生命周期管理</font>**<font style="color:rgba(0, 0, 0, 0.87);">：  
-</font><font style="color:rgba(0, 0, 0, 0.87);">如果没有</font>`<font style="color:rgba(0, 0, 0, 0.87);background-color:rgb(241, 241, 241);">pause</font>`<font style="color:rgba(0, 0, 0, 0.87);">容器，当业务容器退出时，其持有的命名空间也会被销毁，导致Pod内其他容器无法稳定共享资源（如网络）。</font>`<font style="color:rgba(0, 0, 0, 0.87);background-color:rgb(241, 241, 241);">pause</font>`<font style="color:rgba(0, 0, 0, 0.87);">容器作为静态锚点，确保命名空间持续存在。</font>
-+ **<font style="color:rgba(0, 0, 0, 0.87);">资源清理</font>**<font style="color:rgba(0, 0, 0, 0.87);">：  
-</font><font style="color:rgba(0, 0, 0, 0.87);">当Pod被删除时，</font>`<font style="color:rgba(0, 0, 0, 0.87);background-color:rgb(241, 241, 241);">kubelet</font>`<font style="color:rgba(0, 0, 0, 0.87);">会先杀死</font>`<font style="color:rgba(0, 0, 0, 0.87);background-color:rgb(241, 241, 241);">pause</font>`<font style="color:rgba(0, 0, 0, 0.87);">容器，从而自动释放所有关联的命名空间和资源（避免孤儿进程或残留资源）。</font>
 
-<font style="color:rgba(0, 0, 0, 0.87);">例如：你在 kubectl exec 到 pod 内部，通过 ip a 看到的地址是由 pause 容器持有的。</font>
++ **命名空间生命周期管理**：
+  如果没有 `pause` 容器，当业务容器退出时，其持有的命名空间也会被销毁，导致 Pod 内其他容器无法稳定共享资源（如网络）。`pause` 容器作为静态锚点，确保命名空间持续存在。
++ **资源清理**：
+  当 Pod 被删除时，`kubelet` 会先杀死 `pause` 容器，从而自动释放所有关联的命名空间和资源（避免孤儿进程或残留资源）。
+
+例如：你在 kubectl exec 到 pod 内部，通过 ip a 看到的地址是由 pause 容器持有的。
 
 ## 它会持有哪些资源？
 ### 网络命名空间（Network Namespace）最核心的资源
@@ -56,14 +57,14 @@ registry.cn-hangzhou.aliyuncs.com/google_containers/pause:3.6
 + 虽然每个容器都有自己的挂载命名空间以实现文件系统隔离，但 pause 容器通常不直接持有一个共享的挂载命名空间。Pod 级别的存储（如 emptyDir 卷）是通过在每个容器的命名空间内单独挂载来实现共享的，而不是通过共享同一个挂载命名空间。
 
 ### 总结
-| **<font style="color:rgb(51, 51, 51);">资源类型</font>** | **<font style="color:rgb(51, 51, 51);">是否由 Pause 容器持有？</font>** | **<font style="color:rgb(51, 51, 51);">说明</font>** |
+| **资源类型** | **是否由 Pause 容器持有？** | **说明** |
 | :--- | :--- | :--- |
-| **<font style="color:rgba(0, 0, 0, 0.87);">网络命名空间</font>** | **<font style="color:rgba(0, 0, 0, 0.87);">是</font>** | **<font style="color:rgba(0, 0, 0, 0.87);">核心职责</font>**<font style="color:rgba(0, 0, 0, 0.87);">。持有整个 Pod 的唯一 IP 和网络栈。</font> |
-| **<font style="color:rgba(0, 0, 0, 0.87);">IPC 命名空间</font>** | **<font style="color:rgba(0, 0, 0, 0.87);">是</font>** | <font style="color:rgba(0, 0, 0, 0.87);">持有 Pod 级别的 IPC 资源，供容器间通信。</font> |
-| **<font style="color:rgba(0, 0, 0, 0.87);">PID 命名空间</font>** | **<font style="color:rgba(0, 0, 0, 0.87);">条件性是</font>** | <font style="color:rgba(0, 0, 0, 0.87);">仅在</font><font style="color:rgba(0, 0, 0, 0.87);"> </font>`<font style="color:rgba(0, 0, 0, 0.87);background-color:rgb(241, 241, 241);">shareProcessNamespace: true</font>`<br/><font style="color:rgba(0, 0, 0, 0.87);"> </font><font style="color:rgba(0, 0, 0, 0.87);">时持有，成为 PID 1。</font> |
-| **<font style="color:rgba(0, 0, 0, 0.87);">挂载命名空间</font>** | **<font style="color:rgba(0, 0, 0, 0.87);">通常否</font>** | <font style="color:rgba(0, 0, 0, 0.87);">每个容器独立，通过卷（Volume）机制共享存储。</font> |
-| **<font style="color:rgba(0, 0, 0, 0.87);">UTS 命名空间</font>** | **<font style="color:rgba(0, 0, 0, 0.87);">是</font>** | <font style="color:rgba(0, 0, 0, 0.87);">持有 Pod 的主机名（</font>`<font style="color:rgba(0, 0, 0, 0.87);background-color:rgb(241, 241, 241);">spec.hostname</font>`<br/><font style="color:rgba(0, 0, 0, 0.87);">）。</font> |
-| **<font style="color:rgba(0, 0, 0, 0.87);">用户命名空间</font>** | **<font style="color:rgba(0, 0, 0, 0.87);">可能</font>** | <font style="color:rgba(0, 0, 0, 0.87);">如果配置了用户命名空间隔离，它也会是持有者。</font> |
+| **网络命名空间** | **是** | **核心职责**。持有整个 Pod 的唯一 IP 和网络栈。 |
+| **IPC 命名空间** | **是** | 持有 Pod 级别的 IPC 资源，供容器间通信。 |
+| **PID 命名空间** | **条件性是** | 仅在 `shareProcessNamespace: true` 时持有，成为 PID 1。 |
+| **挂载命名空间** | **通常否** | 每个容器独立，通过卷（Volume）机制共享存储。 |
+| **UTS 命名空间** | **是** | 持有 Pod 的主机名（`spec.hostname`）。 |
+| **用户命名空间** | **可能** | 如果配置了用户命名空间隔离，它也会是持有者。 |
 
 
 
