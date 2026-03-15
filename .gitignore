@@ -55,4 +55,6 @@ dev.sh
 
 工作/
 
+.worktrees/
+
 docs/*
