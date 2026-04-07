@@ -33,7 +33,7 @@ Harness Engineering（驾驭工程）就是这副马鞍。马鞍不是买来就�
         
 - **选型哲学：** 为什么要用 CLI + Skill 的方式？—— **极度节省 Token，避免上下文污染。**
     
-![[Pasted image 20260407153031.png]]
+![Pasted image 20260407153031](img/Pasted%20image%2020260407153031.png)
 ## 驯马实战
 
 
@@ -51,7 +51,7 @@ Harness Engineering（驾驭工程）就是这副马鞍。马鞍不是买来就�
 - **头脑风暴：** 调用 `superpowers` 的技能，与 Agent 不断对话，消除需求歧义。
     
 - **灵魂拷问（防呆机制）：** 在让 AI 生成 Spec（规格说明书）前，必须问它一个问题：**“你打算如何验证交付结果符合需求？”**
-    ![[Pasted image 20260407152717.png]]
+    ![Pasted image 20260407152717](img/Pasted%20image%2020260407152717.png)
     
 - **人类一审：** AI 将思考后的验收标准写入 Spec，人类进行第一次审阅，确保方向不跑偏。
     
@@ -84,7 +84,7 @@ Harness Engineering（驾驭工程）就是这副马鞍。马鞍不是买来就�
     6. 计划中提到的路径、函数等是否是瞎编的？
         
     7. 当前 Plan 给一个“傻子”是否能够完整执行？
-![[Pasted image 20260407152552.png]]
+![Pasted image 20260407152552](img/Pasted%20image%2020260407152552.png)
 
 ## 第四部分：马鞍的“变速箱”
 
@@ -92,12 +92,12 @@ Harness Engineering（驾驭工程）就是这副马鞍。马鞍不是买来就�
 - **算力路由：
 	- **高价高性能模型：** 只用于头脑风暴、Plan 编写、Code Review 和验收。
     - **便宜量大模型：** 在 Spec 和 Plan 已经极度严谨（约束好）的情况下，直接用便宜模型配合 `superpowers:subagent-driven-development` 技能一步步执行，因为“傻子也能照着做”。
-     ![[Pasted image 20260407152451.png]]
+     ![Pasted image 20260407152451](img/Pasted%20image%2020260407152451.png)
         
 - **上下文洁癖：** 
 	* 所有的文档检索、项目探索等高频消耗且容易污染记忆的动作，全部外包给**子 Agent (Sub-agent)** 去做。
     - 永远保证主 Agent 的上下文（Context）绝对干净。
-        ![[Pasted image 20260407152958.png]]
+        ![Pasted image 20260407152958](img/Pasted%20image%2020260407152958.png)
 
 ## 第五部分：结语
 
